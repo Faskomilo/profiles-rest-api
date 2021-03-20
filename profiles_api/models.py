@@ -9,3 +9,9 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     username = models.CharField(max_length=50)
     deleted = models.BooleanField(default=False)
+    moderator = models.BooleanField(default=False)
+
+    objects = UserProfileManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name']
