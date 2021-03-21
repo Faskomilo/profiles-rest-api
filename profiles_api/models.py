@@ -16,22 +16,22 @@ class UserProfileManager(BaseUserManager):
         if not email:
             raise ValueError("Users must have an email address")
         email = self.normalize_email(email)
-        user = self.model(email=email, name=name, lastname=None)
+        user = self.model(email=email, name=name, lastname=lastname)
 
         user.set_password(password)
         user.save(using=self._db)
 
         return user
 
-    def create_superuser(self, email, name, lastname, password):
+    def create_superuser(self, email, name, password, lastname = None):
         """
         Create a new User Profile with super user permissions
         """
         
         user = self.create_user(email, name, lastname, password)
 
-        user.is_superuser(True)
-        user.is_moderator(True)
+        user.is_superuser = True
+        user.is_staff = True
         user.save(using=self._db)
 
         return user
@@ -43,9 +43,9 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     """
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=50, unique=True)
-    lastname = models.CharField(max_length=50)
+    lastname = models.CharField(max_length=50, null=True)
     deleted = models.BooleanField(default=False)
-    is_moderator = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
 
     objects = UserProfileManager()
 
@@ -62,5 +62,5 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         """
         Return the user information as a string
         """
-        return "UserProfile[email={}, name={}, lastnasme={}, deleted={}, moderator={}".format(
-            self.email, self.name, self.lastname, self.deleted, self.is_moderator)
+        return "UserProfile[email={}, name={}, lastname={}, deleted={}, moderator={}]".format(
+            self.email, self.name, self.lastname, self.deleted, self.is_staff)
