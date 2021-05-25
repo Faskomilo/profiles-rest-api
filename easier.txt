@@ -1,3 +1,7 @@
+python manage.py createsuperuser
+
+python3 manage.py runserver 0.0.0.0:8000
+
 docker build -t faskomilo/profiles-rest-api .
 
 docker run --rm -it -p 8080:8000 -v "$(pwd)"/shared:/profiles-rest-api/shared --name testdocker faskomilo/profiles-rest-api

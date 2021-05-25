@@ -58,9 +58,16 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         """
         return "{} {}".format(self.name, self.lastname)
 
-    def __str__(self):
+    def toString():
         """
         Return the user information as a string
         """
         return "UserProfile[email={}, name={}, lastname={}, deleted={}, moderator={}]".format(
+            self.email, self.name, self.lastname, self.deleted, self.is_staff)
+
+    def __str__(self):
+        """
+        Return the user information as a string
+        """
+        return "email={}, name={} lastname={},".format(
             self.email, self.name, self.lastname, self.deleted, self.is_staff)
