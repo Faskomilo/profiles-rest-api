@@ -69,5 +69,5 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         """
         Return the user information as a string
         """
-        return "email={}, name={} lastname={},".format(
-            self.email, self.name, self.lastname, self.deleted, self.is_staff)
+        return "{} {}, {}".format(
+            self.name, self.lastname, self.email)

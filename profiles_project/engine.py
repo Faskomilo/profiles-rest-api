@@ -1,5 +1,5 @@
 class Engine():
-    def jsonify(message, data, status="OK"):
+    def serializeJson(message, data, status="OK"):
         json = {
             "message":message,
             "data": data,
