@@ -1,9 +1,13 @@
+from rest_framework import authentication
 from rest_framework.exceptions import server_error
+from rest_framework.utils.serializer_helpers import ReturnDict
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication
 
-from profiles_api import serializers
+from profiles_api import models, serializers, permissions
 from profiles_project.engine import Engine
 
 class TextAPIView(APIView):
@@ -47,6 +51,7 @@ class TextAPIView(APIView):
                 Engine.serializeJson(serializer.errors, data, "KO"), 
                 status=status.HTTP_400_BAD_REQUEST
                 )
+
     def put(self, request, pk=None):
         """
         Handle updating an object
@@ -79,3 +84,100 @@ class TextAPIView(APIView):
                 ""
             )
         )
+
+class TextViewSet(viewsets.ViewSet):
+    """
+    View Set that returns only a text
+    """
+    serializer_class = serializers.TextSerializer
+    
+    def list(self, request):
+        """
+        Returns a text
+        """
+
+        viewset = [
+            "Uses actions such as list, create, retrieve, update, partial_update",
+            "Automatically maps to URLs using Routers",
+            "Provides moore functionality with less code"
+        ]
+
+        return Response(Engine.serializeJson("Hola", viewset))
+
+    def create(self, request):
+        """
+        Create a new text message
+        """
+        serializer = self.serializer_class(data=request.data)
+        data = {
+            "Recieved data":request.data
+            }
+        if serializer.is_valid():
+            name = serializer.validated_data.get("name")
+            message = f"Hello {name}"
+            return Response(
+                Engine.serializeJson(
+                    message, 
+                    data
+                )
+            )
+        else:
+            return Response(
+                Engine.serializeJson(serializer.errors, data, "KO"), 
+                status=status.HTTP_400_BAD_REQUEST
+                )
+
+    def retrieve(self, request, pk=None):
+        """
+        Handle getting an object by its ID
+        """
+        return Response(
+            Engine.serializeJson(
+                "updating",
+                { "http Method":"Get" }
+            )
+        )
+
+    def update(self, request, pk=None):
+        """
+        Handle updating an object by its ID
+        """
+        return Response(
+            Engine.serializeJson(
+                "updating",
+                { "http Method":"PUT" }
+            )
+        )
+
+    def partial_update(self, request, pk=None):
+        """
+        Handle getting an object by its ID
+        """
+        return Response(
+            Engine.serializeJson(
+                "updating",
+                { "http Method":"PATCH" }
+            )
+        )
+
+
+    def destroy(self, request, pk=None):
+        """
+        Handle getting an object by its ID
+        """
+        return Response(
+            Engine.serializeJson(
+                "updating",
+                { "http Method":"DELETE" }
+            )
+        )
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    """
+    Handle the creation and updating of profiles
+    """
+
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.UpdateOwnProfile)

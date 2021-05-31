@@ -12,6 +12,7 @@ RUN pip3 install virtualenv
 RUN virtualenv venv
 RUN . venv/bin/activate
 RUN pip3 install --no-cache-dir -r requirements.txt
+RUN rm requirements.txt
 
 EXPOSE 8000
 
