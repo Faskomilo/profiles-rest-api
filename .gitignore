@@ -131,4 +131,5 @@ dmypy.json
 # ConfigFiles
 *.ini
 
-deploy/
+easier.txt
+shared/
